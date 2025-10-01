@@ -38,18 +38,21 @@ public class Carpeta implements IElemento{
     public Integer esElElementoOEstaEnEl(IElemento elemento, Integer nivel) {
         if (this.esElElemento(elemento)) {
             return nivel;
+        } else if (this.elementos.isEmpty()) {
+            return 0;
         } else {
-            return elementos.stream().mapToInt(e -> esElElementoOEstaEnEl(elemento, nivel + 1)).sum();
+            return elementos.stream().mapToInt(e -> e.esElElementoOEstaEnEl(elemento, nivel + 1)).sum();
         }
     }
 
     @Override
     public void mostrar(Integer identacion) {
+        Integer nivel =  this.nivel();
         String espacios = " ".repeat(identacion);
-        String nivel = "Nivel " + this.nivel() + " ";
-        String imprimir =  espacios + "└ " + this.nombre() + nivel + " ( " + this.tamanio().toString() + "-Bytes )";
+        String nivelStr = "Nivel " + nivel + " ";
+        String imprimir =  espacios + "└ " + this.nombre()+ " " + nivelStr + " ( " + this.tamanio().toString() + "-Bytes )";
         System.out.println(imprimir);
-        elementos.stream().forEach(e -> e.mostrar(identacion + identacion));
+        elementos.stream().forEach(e -> e.mostrar(identacion + identacion / nivel));
     }
 
     @Override
